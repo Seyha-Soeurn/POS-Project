@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->string('name')->nullable();
             $table->string("price")->nullable();
-            $table->unsignedBigInteger('category_id')->nullable();
             $table->boolean('stock')->nullable();
             $table->timestamps();
         });
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products_');
+        Schema::dropIfExists('products');
     }
 };
