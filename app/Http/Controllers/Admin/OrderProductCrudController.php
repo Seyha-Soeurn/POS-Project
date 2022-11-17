@@ -39,8 +39,8 @@ class OrderProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('order_id');
-        CRUD::column('product_id');
+        CRUD::column('order');
+        CRUD::column('product');
         CRUD::column('quantity');
         CRUD::column('created_at');
         CRUD::column('updated_at');
@@ -60,11 +60,19 @@ class OrderProductCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(OrderProductRequest::class);
-
-        CRUD::field('order_id');
-        CRUD::field('product_id');
+        CRUD::setValidation(OrderProductRequest::class);        
+        
+        CRUD::addField([
+            'name'      => 'order',
+            'label'     => "Order",
+        ]);
+        CRUD::addField([
+            'name'      => 'product',
+            'label'     => "Product",
+        ]);
         CRUD::field('quantity');
+    
+
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

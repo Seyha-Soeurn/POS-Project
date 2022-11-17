@@ -10,7 +10,8 @@ class Supplier extends Model
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable =
+    [
         'name',
         'email',
         'phone',

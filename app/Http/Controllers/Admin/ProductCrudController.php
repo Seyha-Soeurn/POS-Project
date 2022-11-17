@@ -65,6 +65,19 @@ class ProductCrudController extends CrudController
         CRUD::field('name');
         CRUD::field('price');
         CRUD::field('stock');
+        CRUD::addfield([
+            'label'     => "Categories",
+            'type'      => 'select2_multiple',
+            'name'      => 'categories', // the method that defines the relationship in your Model
+            'entity'    => 'categories', // the method that defines the relationship in your Model
+            'modefalsel'     => "App\Models\Category", // foreign key model
+            'attribute' => 'name', // foreignsubject_name key attribute that is shown to user
+            'pivot'     => true, // on create&update, do you need to add/delete pivot table entries?
+            // 'select_all' => true, // show Select All and Clear buttons?
+            'options'   => (function ($query) {
+                return $query->orderBy('name', 'ASC')->get();
+            }),
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
