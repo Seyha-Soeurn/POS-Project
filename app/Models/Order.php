@@ -16,4 +16,10 @@ class Order extends Model
         'amount',
         'amount_after_discount'
     ];
+
+    // Relations
+    public function customer()
+    {
+        return $this->belongsTo(Customer::class);
+    }
 }
