@@ -2,8 +2,9 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Product;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Purchase extends Model
 {
@@ -17,4 +18,8 @@ class Purchase extends Model
         'quantity',
         'amount',
     ];
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }
