@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\CategoryRequest;
+use App\Models\Category;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -60,7 +61,21 @@ class CategoryCrudController extends CrudController
     {
         CRUD::setValidation(CategoryRequest::class);
 
-        CRUD::field('name');
+        CRUD::addField([
+            'name' => 'name',
+            'label' => 'name',
+            'type' => 'text',
+            'tab' => 'Category',
+        ]);
+        CRUD::addField(
+            [ 
+                'name'  => 'products',
+                'label' => '',
+                'type'  => 'repeatable',
+                'tab' => 'Products',
+                'subfields' => [],
+            ]
+        );
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:

@@ -11,11 +11,13 @@ class Category extends Model
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable = 
+    [
         'name',
     ];
 
-    public function products(){
-        return $this->hasMany(Product::class, 'order_products');
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'category_products');
     }
 }

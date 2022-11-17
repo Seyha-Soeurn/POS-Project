@@ -62,7 +62,7 @@ class CheckIfAdmin
         if (! $this->checkIfUserIsAdmin(backpack_user())) {
             return $this->respondToUnauthorizedRequest($request);
         }
-
+        \Log::info($request);
         return $next($request);
     }
 }

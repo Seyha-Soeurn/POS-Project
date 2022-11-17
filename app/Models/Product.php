@@ -2,21 +2,29 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Category;
+use App\Models\OrderProduct;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable =
+    [
         'name',
         'price',
         'stock',
     ];
 
-    public function categories(){
-        return $this->hasMany(Category::class, 'order_products');
+    public function categories()
+    {
+        return $this->belongsToMany(Category::class,'category_products');
+    }
+    public function orderProducts()
+    {
+        return $this->hasMany(OrderProduct::class);
     }
 }

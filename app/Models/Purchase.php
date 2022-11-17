@@ -10,7 +10,8 @@ class Purchase extends Model
     use \Backpack\CRUD\app\Models\Traits\CrudTrait;
     use HasFactory;
 
-    protected $fillable = [
+    protected $fillable =
+    [
         'supplier_id',
         'product_id',
         'quantity',
