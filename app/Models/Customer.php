@@ -14,5 +14,28 @@ class Customer extends Model
         'created_at',
         'updated_at',
     ];
-    protected $fillable = ['name', 'phone', 'email','address'];
+
+    protected $fillable = [
+        'name',
+        'phone',
+        'email',
+        'address'
+    ];
+
+    // Relations
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
+    // Accessors
+    public function getProfileAttribute()
+    {
+        return optional($this->image)->url;
+    }
 }
