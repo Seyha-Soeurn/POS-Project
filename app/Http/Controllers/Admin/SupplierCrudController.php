@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\SupplierRequest;
+use App\Models\Supplier;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
 
@@ -15,8 +16,8 @@ class SupplierCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation { destroy as traitDestroy; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     /**
@@ -39,6 +40,12 @@ class SupplierCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addColumn([
+            'name' => 'Profile',
+            'type' => 'image',
+            'height' => '30px',
+            'width'  => '30px',
+        ]);
         CRUD::column('name');
         CRUD::column('phone');
         CRUD::column('email');
@@ -62,11 +69,30 @@ class SupplierCrudController extends CrudController
     protected function setupCreateOperation()
     {
         CRUD::setValidation(SupplierRequest::class);
-
+        $rules = [
+            'name' => 'required',
+            'phone' => 'required',
+            'email' => 'required',
+            'address' => 'required',
+        ];
+        $messages = [
+            'name.required' => 'name is require to field!',
+            'phone.required' => 'Phone field can be null!!',
+            'email.required' => 'Email is require!!!',
+            'address.required' => 'Address is require!!!',
+        ];
+        $this->crud->setValidation($rules, $messages);
         CRUD::field('name');
-        CRUD::field('phone');
+
         CRUD::field('email');
         CRUD::field('address');
+        CRUD::addField([
+            'name' => 'image.url',
+            'label' => 'Profile',
+            'type' => 'image',
+            'aspect_ratio' => 1,
+            'crop' => true
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -84,5 +110,15 @@ class SupplierCrudController extends CrudController
     protected function setupUpdateOperation()
     {
         $this->setupCreateOperation();
+    }
+
+    public function destroy()
+    {
+        $entry = $this->crud->getCurrentEntry();
+        if ($entry->image->url) {
+            \Storage::disk('upload')->delete($entry->image->url);
+        }
+        $entry->image()->delete();
+        return $entry->delete();
     }
 }
