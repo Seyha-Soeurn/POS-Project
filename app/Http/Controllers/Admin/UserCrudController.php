@@ -16,7 +16,7 @@ class UserCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation { destroy as traitDestroy; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
     /**
@@ -39,6 +39,12 @@ class UserCrudController extends CrudController
      */
     protected function setupListOperation()
     {
+        CRUD::addColumn([
+            'name' => 'Profile',
+            'type' => 'image',
+            'height' => '30px',
+            'width'  => '30px',
+        ]);
         CRUD::column('name');
         CRUD::column('email');
         CRUD::column('phone');
@@ -66,6 +72,13 @@ class UserCrudController extends CrudController
         CRUD::field('password');
         CRUD::field('phone');
         CRUD::field('address');
+        CRUD::addField([
+            'name' => 'image.url',
+            'label' => 'Profile',
+            'type' => 'image',
+            'aspect_ratio' => 1,
+            'crop' => true
+        ]);
 
         /**
          * Fields can be defined using the fluent syntax or array syntax:
@@ -84,5 +97,16 @@ class UserCrudController extends CrudController
     {
         $this->setupCreateOperation();
         CRUD::removeField('password');
+    }
+
+    // Delete Customer and relationship
+    public function destroy()
+    {
+        $entry = $this->crud->getCurrentEntry();
+        if ($entry->image->url) {
+            \Storage::disk('upload')->delete($entry->image->url);
+        }
+        $entry->image()->delete();
+        return $entry->delete();
     }
 }

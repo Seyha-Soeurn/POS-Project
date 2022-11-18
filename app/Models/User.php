@@ -48,8 +48,20 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    // Relations
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
+
     public function orders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    // Accessors
+    public function getProfileAttribute()
+    {
+        return optional($this->image)->url;
     }
 }

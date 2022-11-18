@@ -72,7 +72,9 @@ class Image extends Model
     {
         parent::boot();
         static::deleted(function($obj) {
-            \Storage::disk('local')->delete($obj->image);
+            if ($obj->image) {
+                \Storage::disk('local')->delete($obj->image);
+            }
         });
     }
 }

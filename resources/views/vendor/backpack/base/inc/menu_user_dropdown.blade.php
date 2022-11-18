@@ -1,9 +1,13 @@
 <li class="nav-item dropdown pr-4">
   <a class="nav-link d-flex align-items-center" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false" style="position: relative;height: 35px;margin: 0 10px;">
-    {{-- <img class="img-avatar" src="{{ backpack_avatar_url(backpack_auth()->user()) }}" alt="{{ backpack_auth()->user()->name }}" onerror="this.style.display='none'" style="margin: 0;position: absolute;left: 0;z-index: 1;"> --}}
-    <span class="backpack-avatar-menu-container bg-primary" style="width: 35px;height: 35px;border-radius: 50%;color: #FFF;line-height: 35px;font-size: 85%;font-weight: 300;">
-      {{backpack_user()->getAttribute('name') ? mb_substr(backpack_user()->name, 0, 1, 'UTF-8') : 'A'}}
-    </span>
+    @if (backpack_user()->Profile)
+      <img src="{{ URL(backpack_user()->Profile) }}" style="width: 35px;height: 35px;border-radius: 50%;">
+    @else
+      <span class="backpack-avatar-menu-container bg-primary" style="width: 35px;height: 35px;border-radius: 50%;color: #FFF;line-height: 35px;font-size: 85%;font-weight: 300;">
+        {{backpack_user()->getAttribute('name') ? mb_substr(backpack_user()->name, 0, 1, 'UTF-8') : 'A'}}
+      </span>
+    @endif
+    
     <span class="ml-2 text-white">{{ backpack_user()->getAttribute('name') }}</span>
     <i class="la la-caret-down text-white ml-2"></i>
   </a>

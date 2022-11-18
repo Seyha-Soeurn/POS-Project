@@ -20,6 +20,11 @@ class Product extends Model
         'stock',
     ];
 
+    // protected $casts = [
+    //     'images' => 'array'
+    // ];
+
+    // Relations
     public function categories()
     {
         return $this->belongsToMany(Category::class,'category_products');
@@ -32,5 +37,10 @@ class Product extends Model
     public function purchases()
     {
         return $this->hasMany(Purchase::class);
+    }
+
+    public function images()
+    {
+        return $this->morphMany(Image::class, 'imageable');
     }
 }
