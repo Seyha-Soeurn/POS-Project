@@ -49,24 +49,10 @@ return [
 
     // CSS files that are loaded in all pages, using Laravel's asset() helper
     'styles' => [
-        'packages/backpack/base/css/bundle.css', // has primary color electric purple (backpack default)
-        // 'packages/backpack/base/css/blue-bundle.css', // has primary color blue
-
-        // Here's what's inside the bundle:
-        // 'packages/@digitallyhappy/backstrap/css/style.min.css',
-        // 'packages/animate.css/animate.min.css',
-        // 'packages/noty/noty.css',
-
-        // Load the fonts separately (so that you can replace them at will):
+        'packages/backpack/base/css/bundle.css', 
+        'css/custom.css',
         'packages/source-sans-pro/source-sans-pro.css',
-        'packages/line-awesome/css/line-awesome.min.css',
-
-        // Example (the fonts above, loaded from CDN instead)
-        // 'https://maxcdn.icons8.com/fonts/line-awesome/1.1/css/line-awesome-font-awesome.min.css',
-        // 'https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic',
-
-        // Example (load font-awesome instead of line-awesome):
-        // 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css',
+        'packages/line-awesome/css/line-awesome.min.css'
     ],
 
     // CSS files that are loaded in all pages, using Laravel's mix() helper

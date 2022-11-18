@@ -12,6 +12,7 @@
         "vite": "^3.0.0"
     },
     "dependencies": {
+        "intl-tel-input": "^17.0.19",
         "lightbox2": "^2.11.3"
     }
 }

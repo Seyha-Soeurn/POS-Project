@@ -65,7 +65,7 @@ class CustomerCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(CustomerRequest::class);
+
 
         CRUD::field('name');
         CRUD::field('phone');

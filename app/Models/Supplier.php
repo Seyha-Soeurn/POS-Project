@@ -21,4 +21,13 @@ class Supplier extends Model
     {
         return $this->hasMany(Purchase::class);
     }
+
+    public function getProfileAttribute()
+    {
+        return optional($this->image)->url;
+    }
+    public function image()
+    {
+        return $this->morphOne(Image::class, 'imageable');
+    }
 }
