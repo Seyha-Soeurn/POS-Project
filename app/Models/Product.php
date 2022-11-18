@@ -20,14 +20,10 @@ class Product extends Model
         'stock',
     ];
 
-    // protected $casts = [
-    //     'images' => 'array'
-    // ];
-
     // Relations
     public function categories()
     {
-        return $this->belongsToMany(Category::class,'category_products');
+        return $this->belongsToMany(Category::class, 'category_products');
     }
     public function orderProducts()
     {
