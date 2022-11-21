@@ -14,10 +14,11 @@
 	<div class="backstrap-file mt-2">
 		<input
 		type="file"
-		@include('crud::fields.inc.attributes', ['default_class' =>  isset($field['value']) && $field['value']!=null?'file_input backstrap-file-input':'file_input backstrap-file-input'])
+		class="file_input backstrap-file-input"
 		multiple
+		id="imagesFiles"
 		>
-		<label class="backstrap-file-label" for="customFile">Upload images</label>
+		<label class="backstrap-file-label" for="imagesFiles">Upload images</label>
 	</div>
 	
 	<div class="well well-sm existing-file" id="preview-container" style="margin-top: 30px">
@@ -143,7 +144,6 @@
 			gap: 5px;
 			border-radius: 3px;
 			box-sizing: border-box;
-			margin: 10px 0 10px 0;
 		}
 		.file-preview .preview-image {
 			height: 100px;
@@ -167,6 +167,8 @@
         		var subFieldName = element.attr('data-sub-field-name');
         		var clearFileButton = element.find(".file-clear-button");
         		var fileInput = element.find("input[type=file]");
+				let maxSize = 5242880;
+				let totalSize = 0;
 				
 		        $('div#preview-container').click(function(e) {
 					e.preventDefault();
@@ -185,53 +187,62 @@
 		        });
 
 		        fileInput.change(function() {
-					// check if all files are in image type
+					// check if all files are in image type and get size of upload
 					let isAllFileAreImage = true;
 					let validImageTypes = ["image/gif", "image/jpeg", "image/png", "image/jpg"];
 					Array.from($(this)[0].files).forEach(eachFile => {
+						totalSize += eachFile['size'];
 						if ($.inArray(eachFile['type'], validImageTypes) <= 0) {
 							isAllFileAreImage = false;
 						}
 					});
 
 					if (isAllFileAreImage) {
-						let selectedFiles = [];
-
-						Array.from($(this)[0].files).forEach(file => {
-							selectedFiles.push({name: file.name, type: file.type})
-						});
-
-						let uploadedFiles = fileInput[0].files;
-						uploadedFiles.forEach((file, index) => {
-							// Render to preview image
-							let reader = new FileReader();
-							reader.readAsDataURL(file);
-							reader.onload = e => {
-								// Get max index to set position of data
-								let maxIndex = 0;
-								let indexToUse = maxIndex;
-								if ($( 'input.store-index' ).first().length > 0) {
-									maxIndex = $( 'input.store-index' ).first().data('index')
-									$( 'input.store-index' ).each(function( index, element ) {
-										if ($(element).data('index') > maxIndex) {
-											maxIndex = $(element).data('index');
-										}
-									})
-									indexToUse = maxIndex+1;
-								}
-
-								// Create new preview element
-								let mainTag = $("<div>").attr('class', 'position-relative').appendTo('div.file-preview');
-								let linkImage = $("<a>").attr('href', null).attr('target', '_blank').appendTo(mainTag);
-								$("<img>").attr('src', e.target.result).attr('class', 'preview-image').appendTo(linkImage); 
-								$("<input>").attr('name', fieldName + '['+(indexToUse)+'][id]').attr("type", "hidden").attr('value', null).attr('class', 'store-index').attr('data-index', (indexToUse)).appendTo(mainTag);
-								$("<input>").attr('name', fieldName + '['+(indexToUse)+']['+subFieldName+']').attr("type", "hidden").attr('value', e.target.result).appendTo(mainTag);
-								$("<i>").attr("class", "la la-remove btn-light float-right file-clear-button position-absolute").attr('title', 'Remove').appendTo(mainTag);
-							}
-						});
+						if (totalSize <= maxSize) {
+							let selectedFiles = [];
 	
-						// remove the hidden input, so that the setXAttribute method is no longer triggered
-						$("input[type=hidden][name='"+fieldName+"']").remove();
+							Array.from($(this)[0].files).forEach(file => {
+								selectedFiles.push({name: file.name, type: file.type})
+							});
+	
+							let uploadedFiles = fileInput[0].files;
+							uploadedFiles.forEach((file, index) => {
+								// Render to preview image
+								let reader = new FileReader();
+								reader.readAsDataURL(file);
+								reader.onload = e => {
+									// Get max index to set position of data
+									let maxIndex = 0;
+									let indexToUse = maxIndex;
+									if ($( 'input.store-index' ).first().length > 0) {
+										maxIndex = $( 'input.store-index' ).first().data('index')
+										$( 'input.store-index' ).each(function( index, element ) {
+											if ($(element).data('index') > maxIndex) {
+												maxIndex = $(element).data('index');
+											}
+										})
+										indexToUse = maxIndex+1;
+									}
+	
+									// Create new preview element
+									let mainTag = $("<div>").attr('class', 'position-relative').appendTo('div.file-preview');
+									let linkImage = $("<a>").attr('href', null).attr('target', '_blank').appendTo(mainTag);
+									$("<img>").attr('src', e.target.result).attr('class', 'preview-image').appendTo(linkImage); 
+									$("<input>").attr('name', fieldName + '['+(indexToUse)+'][id]').attr("type", "hidden").attr('value', null).attr('class', 'store-index').attr('data-index', (indexToUse)).appendTo(mainTag);
+									$("<input>").attr('name', fieldName + '['+(indexToUse)+']['+subFieldName+']').attr("type", "hidden").attr('value', e.target.result).appendTo(mainTag);
+									$("<i>").attr("class", "la la-remove btn-light float-right file-clear-button position-absolute").attr('title', 'Remove').appendTo(mainTag);
+								}
+							});
+		
+							// remove the hidden input, so that the setXAttribute method is no longer triggered
+							$("input[type=hidden][name='"+fieldName+"']").remove();
+						} else {
+							fileInput.val(null);
+							new Noty({
+								type: 'error',
+								text: 'Upload size must not be greater than 5MB.'
+							}).show();
+						}
 					} else {
 						fileInput.val(null);
 						new Noty({
