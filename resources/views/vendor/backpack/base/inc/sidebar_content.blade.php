@@ -53,11 +53,11 @@
 <li class="nav-item nav-dropdown">
     <a class="nav-link nav-dropdown-toggle" href="#">
     <i class="nav-icon la la-shopping-cart"></i>
-        Order
+        Sell
     </a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order') }}"><i class="nav-icon la la-list"></i> Order List</a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order/create') }}"><i class="nav-icon la la-plus"></i> Add Order</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order') }}"><i class="nav-icon la la-list"></i> Sell list</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order/create') }}"><i class="nav-icon la la-plus"></i> Add sell</a></li>
     </ul>
 </li>
 
@@ -68,8 +68,8 @@
     Order Details
     </a>
     <ul class="nav-dropdown-items">
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order-product') }}"><i class="nav-icon la la-list"></i>List order Product </a></li>
-        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order-product/create') }}"><i class="nav-icon la la-plus"></i> Add new</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order-product') }}"><i class="nav-icon la la-list"></i> Order Details List</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ backpack_url('order-product/create') }}"><i class="nav-icon la la-plus"></i> Add Order Details</a></li>
     </ul>
 </li>
 

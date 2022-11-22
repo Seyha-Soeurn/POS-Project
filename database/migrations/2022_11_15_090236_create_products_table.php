@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string("price")->nullable();
             $table->string('stock')->nullable();
+            $table->string('product_code')->nullable();
             $table->timestamps();
         });
     }

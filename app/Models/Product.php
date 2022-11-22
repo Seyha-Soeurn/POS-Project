@@ -18,6 +18,7 @@ class Product extends Model
         'name',
         'price',
         'stock',
+        'product_code',
     ];
 
     // Relations
