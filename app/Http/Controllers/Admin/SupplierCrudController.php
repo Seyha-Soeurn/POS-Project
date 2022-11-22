@@ -16,7 +16,7 @@ class SupplierCrudController extends CrudController
 {
     use \Backpack\CRUD\app\Http\Controllers\Operations\ListOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\CreateOperation;
-    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation { update as traitUpdate; }
+    use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation { destroy as traitDestroy; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
 
@@ -83,8 +83,12 @@ class SupplierCrudController extends CrudController
         ];
         $this->crud->setValidation($rules, $messages);
         CRUD::field('name');
-
         CRUD::field('email');
+        CRUD::addField([
+            'name' => 'phone',
+            'type' => 'phone',
+            'label' => 'Phone number',
+        ]);
         CRUD::field('address');
         CRUD::addField([
             'name' => 'image.url',
