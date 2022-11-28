@@ -154,7 +154,6 @@
                         </div>
                     </div>
                 </div>
-                @include('admin.orders.list_products')
             </div>
 
             @include('crud::inc.form_save_buttons')

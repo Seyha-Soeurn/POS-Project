@@ -35,6 +35,7 @@ class OrderCrudController extends CrudController
         $this->data['categories'] = Category::all();
         $this->crud->setCreateView('add_sell');
         $this->crud->setUpdateView('add_sell');
+        $this->crud->setShowView('preview_sell');
     }
 
     /**
