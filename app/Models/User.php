@@ -3,10 +3,12 @@
 namespace App\Models;
 
 /*** use Illuminate\Contracts\Auth\MustVerifyEmail; */
+use App\Models\User;
+use App\Models\Order;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
@@ -63,5 +65,16 @@ class User extends Authenticatable
     public function getProfileAttribute()
     {
         return optional($this->image)->url;
+    }
+
+    // Getters
+    public function getProfile()
+    {
+        return Image::where('imageable_type', User::class)->where('imageable_id', $this->id)->first();
+    }
+
+    public function getSells()
+    {
+        return Order::where('seller_id', $this->id)->get();
     }
 }
