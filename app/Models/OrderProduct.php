@@ -17,6 +17,7 @@ class OrderProduct extends Model
         'order_id',
         'product_id',
         'quantity',
+        'discount',
     ];
     public function order()
     {
@@ -25,5 +26,11 @@ class OrderProduct extends Model
     public function product()
     {
         return $this->belongsTo(Product::class);
+    }
+
+    // Getters
+    public function getRelatedProduct()
+    {
+        return Product::find($this->product_id);
     }
 }

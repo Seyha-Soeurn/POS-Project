@@ -25,4 +25,9 @@ Route::group([
     Route::crud('order', 'OrderCrudController');
     Route::crud('purchase', 'PurchaseCrudController');
     Route::crud('order-product', 'OrderProductCrudController');
+
+    // Get data to view
+    Route::get('products', 'ProductCrudController@listProduct');
+    Route::post('products/filter', 'ProductCrudController@filterProduct');
+    Route::get('products/{id}', 'ProductCrudController@getProduct');
 }); // this should be the absolute last line of this file

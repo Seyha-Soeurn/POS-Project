@@ -15,7 +15,7 @@ class OrderProductObserver
      */
     public function created(OrderProduct $orderProduct)
     {
-        $product = Product::find(request()->product);
+        $product = Product::find($orderProduct->product_id);
         $orderProduct->product()->update([
             'stock' => $product->stock - $orderProduct->quantity
         ]);
@@ -30,7 +30,7 @@ class OrderProductObserver
     public function updated(OrderProduct $orderProduct)
     {
         $quantityToProcess = $orderProduct->quantity - $orderProduct->getOriginal('quantity');
-        $product = Product::find(request()->product);
+        $product = Product::find($orderProduct->product_id);
         if ($product->stock - $quantityToProcess >= 0) {
             $orderProduct->product()->update([
                 'stock' => $product->stock - $quantityToProcess

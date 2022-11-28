@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Models\Product;
+use Illuminate\Http\Request;
 use App\Models\CategoryProduct;
 use App\Http\Requests\ProductRequest;
 use App\Repository\Eloquent\ProductRepository;
@@ -111,5 +112,47 @@ class ProductCrudController extends CrudController
         }
         $entry->images()->delete();
         return $this->traitDestroy($entry);
+    }
+
+    // Get all products
+    public function listProduct()
+    {
+        $listProduct = Product::with(['images'])->get();
+        return response()->json(['success' => true, 'data' => $listProduct]);
+    }
+
+    // Search products
+    public function filterProduct(Request $request)
+    {
+        if ($request->category_id && $request->keyword) {
+            $categoryProducts = CategoryProduct::select('product_id')->where('category_id', $request->category_id)->pluck('product_id')->toArray();
+            $listProduct = Product::with(['images'])
+            ->whereIn('id', $categoryProducts)
+            ->where(strtolower('name'), 'LIKE', '%'.strtolower($request->keyword).'%')
+            ->orWhere(strtolower('price'), 'LIKE', '%'.strtolower($request->keyword).'%')
+            ->orWhere(strtolower('product_code'), 'LIKE', '%'.strtolower($request->keyword).'%')
+            ->get();
+            return response()->json(['success' => true, 'data' => $listProduct]);
+        } else {
+            if ($request->keyword) {
+                $listProduct = Product::with(['images'])
+                ->where(strtolower('name'), 'LIKE', '%'.strtolower($request->keyword).'%')
+                ->orWhere(strtolower('price'), 'LIKE', '%'.strtolower($request->keyword).'%')
+                ->orWhere(strtolower('product_code'), 'LIKE', '%'.strtolower($request->keyword).'%')
+                ->get();
+                return response()->json(['success' => true, 'data' => $listProduct]);
+            } elseif ($request->category_id) {
+                $categoryProducts = CategoryProduct::select('product_id')->where('category_id', $request->category_id)->pluck('product_id')->toArray();
+                $listProduct = Product::with(['images'])
+                ->whereIn('id', $categoryProducts)->get();
+                return response()->json(['success' => true, 'data' => $listProduct]);
+            }
+        }
+    }
+
+    public function getProduct($id)
+    {
+        $product = Product::findOrFail($id);
+        return response()->json(['success' => true, 'data' => $product]);
     }
 }

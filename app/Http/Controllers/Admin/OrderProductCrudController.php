@@ -39,9 +39,10 @@ class OrderProductCrudController extends CrudController
      */
     protected function setupListOperation()
     {
-        CRUD::column('order');
-        CRUD::column('product');
+        CRUD::column('order')->attribute('id');
+        CRUD::column('product')->attribute('name');
         CRUD::column('quantity');
+        CRUD::column('discount')->default('0');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -60,17 +61,18 @@ class OrderProductCrudController extends CrudController
      */
     protected function setupCreateOperation()
     {
-        CRUD::setValidation(OrderProductRequest::class);        
+        CRUD::setValidation(OrderProductRequest::class);
         
         CRUD::addField([
-            'name'      => 'order',
+            'name'      => 'order_id',
             'label'     => "Order",
         ]);
         CRUD::addField([
-            'name'      => 'product',
+            'name'      => 'product_id',
             'label'     => "Product",
         ]);
         CRUD::field('quantity');
+        CRUD::field('discount');
     
 
 
