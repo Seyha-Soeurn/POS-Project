@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\Image;
+use App\Models\Product;
 use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\OrderProduct;
@@ -40,5 +42,16 @@ class Product extends Model
     public function images()
     {
         return $this->morphMany(Image::class, 'imageable');
+    }
+
+    // Getters
+    public function getImages()
+    {
+        return Image::where('imageable_type', Product::class)->where('imageable_id', $this->id)->get();
+    }
+
+    public function getCategories()
+    {
+        return CategoryProduct::where('product_id', $this->id)->get();
     }
 }
