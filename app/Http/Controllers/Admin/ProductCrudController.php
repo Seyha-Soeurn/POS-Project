@@ -112,4 +112,8 @@ class ProductCrudController extends CrudController
         $entry->images()->delete();
         return $this->traitDestroy($entry);
     }
+
+    public function getProducts(){
+        return Product::all();
+    }
 }

@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductCrudController;
+use App\Http\Controllers\Admin\PurchaseCrudController;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -25,4 +27,9 @@ Route::group([
     Route::crud('order', 'OrderCrudController');
     Route::crud('purchase', 'PurchaseCrudController');
     Route::crud('order-product', 'OrderProductCrudController');
+
+    // product route extra
+    Route::get('getproducts',[ProductCrudController::class,'getProducts']);
+    // purchase route extra
+    Route::get('getpurchase',[PurchaseCrudController::class,'getPurchases']);
 }); // this should be the absolute last line of this file

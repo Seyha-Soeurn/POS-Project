@@ -52,7 +52,9 @@ return [
         'packages/backpack/base/css/bundle.css', 
         'css/custom.css',
         'packages/source-sans-pro/source-sans-pro.css',
-        'packages/line-awesome/css/line-awesome.min.css'
+        'packages/line-awesome/css/line-awesome.min.css',
+        'https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css',
+
     ],
 
     // CSS files that are loaded in all pages, using Laravel's mix() helper
@@ -118,10 +120,13 @@ return [
     // SCRIPTS
     // -------
 
-    // JS files that are loaded in all pages, using Laravel's asset() helper
+    // JS files that are loaded in all pages, using Laravel's asset() helperjs how can i know the package is available or not
     'scripts' => [
         // Backstrap includes jQuery, Bootstrap, CoreUI, PNotify, Popper
         'packages/backpack/base/js/bundle.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js',
+        'https://cdnjs.cloudflare.com/ajax/libs/axios/1.1.3/axios.min.js',
 
         // examples (everything inside the bundle, loaded from CDN)
         // 'https://code.jquery.com/jquery-3.4.1.min.js',

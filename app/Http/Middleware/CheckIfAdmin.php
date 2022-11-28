@@ -63,6 +63,7 @@ class CheckIfAdmin
             return $this->respondToUnauthorizedRequest($request);
         }
         \Log::info($request);
+        // dd(request());
         return $next($request);
     }
 }

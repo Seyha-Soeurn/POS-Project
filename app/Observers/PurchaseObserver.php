@@ -4,6 +4,9 @@ namespace App\Observers;
 
 use App\Models\Product;
 use App\Models\Purchase;
+use PhpParser\Node\Expr\FuncCall;
+
+use function PHPSTORM_META\elementType;
 
 class PurchaseObserver
 {
@@ -15,32 +18,35 @@ class PurchaseObserver
      */
     public function created(Purchase $purchase)
     {
-        $product = Product::find(request()->product_id);
-        $purchase->product()->update([
-            'stock' => $product->stock + $purchase->quantity
+
+        // $product = Product::find(request()->product_id);
+        // $purchase->product()->update([
+        //     'stock' => $product->stock + $purchase->quantity,
+        // ]);
+        $purchase->update([
+            "purchase_code" => $purchase->id,
         ]);
     }
-
     /**
      * Handle the Purchase "updated" event.
      *
      * @param  \App\Models\Purchase  $purchase
      * @return void
      */
-    public function updated(Purchase $purchase)
-    {
-        $quantityToProcess = $purchase->quantity - $purchase->getOriginal('quantity');
-        $product = Product::find(request()->product_id);
-        if ($product->stock + $quantityToProcess >= 0) {
-            $purchase->product()->update([
-                'stock' => $product->stock + $quantityToProcess
-            ]);
-        } else {
-            $purchase->product()->update([
-                'stock' => 0
-            ]);
-        }
-    }
+    // public function updated(Purchase $purchase)
+    // {
+    //     $quantityToProcess = $purchase->quantity - $purchase->getOriginal('quantity');
+    //     $product = Product::find(request()->product_id);
+    //     if ($product->stock + $quantityToProcess >= 0) {
+    //         $purchase->product()->update([
+    //             'stock' => $product->stock + $quantityToProcess
+    //         ]);
+    //     } else {
+    //         $purchase->product()->update([
+    //             'stock' => 0
+    //         ]);
+    //     }
+    // }
 
     /**
      * Handle the Purchase "deleted" event.
@@ -52,7 +58,9 @@ class PurchaseObserver
     {
         //
     }
-
+    // public function updating(){
+    //     dd(request());
+    // }
     /**
      * Handle the Purchase "restored" event.
      *
