@@ -2,8 +2,11 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Image;
+use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
@@ -37,5 +40,16 @@ class Customer extends Model
     public function getProfileAttribute()
     {
         return optional($this->image)->url;
+    }
+
+    // Getters
+    public function getProfile()
+    {
+        return Image::where('imageable_type', Customer::class)->where('imageable_id', $this->id)->first();
+    }
+
+    public function getOrders()
+    {
+        return Order::where('customer_id', $this->id)->get();
     }
 }
