@@ -31,7 +31,7 @@
         {{-- Tabs --}}
         <ul class="nav nav-tabs" role="tablist">
             <li role="presentation" class="nav-item">
-                <a href="#tab_customer-info" aria-controls="tab_customer-info" role="tab" tab_name="customer-info" data-toggle="tab" class="nav-link active" aria-selected="true">
+                <a href="#tab_customer-info" aria-controls="tab_customer-info" role="tab" tab_name="entry-info" data-toggle="tab" class="nav-link active" aria-selected="true">
                     User info
                 </a>
             </li>
@@ -44,9 +44,9 @@
 
         {{-- Default box --}}
         @php
-            $customer = $crud->entry;
-            $profile = $customer->getProfile();
-            $sells = $customer->getSells();
+            $user = $crud->entry;
+            $profile = $user->getProfile();
+            $sells = $user->getSells();
         @endphp
         
         <div class="bg-white pt-1 pb-2" style="border-left: 1px solid #d9e2ef;
@@ -64,34 +64,34 @@
                 <div class="pl-3 py-2 d-flex" style="width: 100%;">
                     <strong style="width: 30%;">Name</strong>
                     <span class="text-start" style="width: 5%;">:</span>
-                    <span style="width: 65%;">{{ $customer->name }}</span>
+                    <span style="width: 65%;">{{ $user->name }}</span>
                 </div>
                 <div class="pl-3 py-2 d-flex" style="width: 100%;">
                     <strong style="width: 30%;">Email</strong>
                     <span class="text-start" style="width: 5%;">:</span>
                     <span style="width: 65%;">
-                        <a href="mailto:{{ $customer->email }}">{{ $customer->email }}</a>
+                        <a href="mailto:{{ $user->email }}">{{ $user->email }}</a>
                     </span>
                 </div>
                 <div class="pl-3 py-2 d-flex" style="width: 100%;">
                     <strong style="width: 30%;">Phone</strong>
                     <span class="text-start" style="width: 5%;">:</span>
-                    <span style="width: 65%;">{{ $customer->phone }}</span>
+                    <span style="width: 65%;">{{ $user->phone }}</span>
                 </div>
                 <div class="pl-3 py-2 d-flex" style="width: 100%;">
                     <strong style="width: 30%;">Address</strong>
                     <span class="text-start" style="width: 5%;">:</span>
-                    <span style="width: 65%;">{{ $customer->address }}</span>
+                    <span style="width: 65%;">{{ $user->address }}</span>
                 </div>
                 <div class="pl-3 py-2 d-flex" style="width: 100%;">
                     <strong style="width: 30%;">Created at</strong>
                     <span class="text-start" style="width: 5%;">:</span>
-                    <span style="width: 65%;">{{ $customer->created_at }}</span>
+                    <span style="width: 65%;">{{ $user->created_at }}</span>
                 </div>
                 <div class="pl-3 py-2 d-flex" style="width: 100%;">
                     <strong style="width: 30%;">Updated at</strong>
                     <span class="text-start" style="width: 5%;">:</span>
-                    <span style="width: 65%;">{{ $customer->updated_at }}</span>
+                    <span style="width: 65%;">{{ $user->updated_at }}</span>
                 </div>
                 <div class="d-flex justify-content-start mt-1 ml-1">
                     @include('crud::inc.button_stack', ['stack' => 'line'])

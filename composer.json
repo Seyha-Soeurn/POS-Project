@@ -11,7 +11,8 @@
         "intervention/image": "^2.7",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "tabacitu/consoletvs-charts-temp": "6.*"
     },
     "require-dev": {
         "backpack/generators": "^3.3",
