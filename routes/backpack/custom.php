@@ -37,4 +37,6 @@ Route::group([
     Route::get('products', 'ProductCrudController@listProduct');
     Route::post('products/filter', 'ProductCrudController@filterProduct');
     Route::get('products/{id}', 'ProductCrudController@getProduct');
+    Route::get('charts/weekly-purchases', 'Charts\WeeklyPurchasesChartController@response')->name('charts.weekly-purchases.index');
+    Route::get('charts/weekly-sells', 'Charts\WeeklySellsChartController@response')->name('charts.weekly-sells.index');
 }); // this should be the absolute last line of this file
