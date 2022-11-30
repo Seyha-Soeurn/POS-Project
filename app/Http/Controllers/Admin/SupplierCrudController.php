@@ -19,6 +19,7 @@ class SupplierCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation { destroy as traitDestroy; }
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\BulkDeleteOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -30,6 +31,8 @@ class SupplierCrudController extends CrudController
         CRUD::setModel(\App\Models\Supplier::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/supplier');
         CRUD::setEntityNameStrings('supplier', 'suppliers');
+        CRUD::enableExportButtons();
+        $this->crud->addButton('top', 'import_button', 'view', 'Import', 'end');
     }
 
     /**

@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Imports\ProductsImport;
 use App\Models\CategoryProduct;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Requests\ProductRequest;
 use App\Repository\Eloquent\ProductRepository;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
@@ -22,6 +24,7 @@ class ProductCrudController extends CrudController
     use \Backpack\CRUD\app\Http\Controllers\Operations\UpdateOperation;
     use \Backpack\CRUD\app\Http\Controllers\Operations\DeleteOperation {destroy as traitDestroy;}
     use \Backpack\CRUD\app\Http\Controllers\Operations\ShowOperation;
+    use \Backpack\CRUD\app\Http\Controllers\Operations\BulkDeleteOperation;
 
     /**
      * Configure the CrudPanel object. Apply settings to all operations.
@@ -34,6 +37,8 @@ class ProductCrudController extends CrudController
         CRUD::setRoute(config('backpack.base.route_prefix') . '/product');
         CRUD::setEntityNameStrings('product', 'products');
         $this->crud->setShowView('preview_product');
+        CRUD::enableExportButtons();
+        $this->crud->addButton('top', 'import_button', 'view', 'Import', 'end');
     }
 
     /**
@@ -46,7 +51,7 @@ class ProductCrudController extends CrudController
     {
         CRUD::column('name');
         CRUD::column('price');
-        CRUD::column('stock');
+        CRUD::column('stock')->default('0');
         CRUD::column('created_at');
         CRUD::column('updated_at');
 
@@ -151,6 +156,7 @@ class ProductCrudController extends CrudController
         }
     }
 
+    // Get one product
     public function getProduct($id)
     {
         $product = Product::findOrFail($id);
