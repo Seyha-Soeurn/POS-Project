@@ -10,12 +10,12 @@ class Import implements ToModel, WithHeadingRow
     private $model = null;
     private $fields = null;
 
-    public function __construct($model, $fields)
+    public function __construct($model)
     {
         if (class_exists("App\Models\\" . $model)) {
             $this->model = app("App\Models\\" . $model);
+            $this->fields = $this->model->importable;
         }
-        $this->fields = $fields;
     }
 
     /**

@@ -1,12 +1,9 @@
 
 <!-- Button trigger modal -->
-  <button type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#exampleModal"><em class="la la-cloud-upload-alt"></em>
-    Import
-    <input type="hidden" name="model-name" value="{{ ucFirst($crud->entity_name) }}">
-    @foreach ($crud->model->importable as $importableField)
-      <input type="hidden" name="fields" value="{{ $importableField }}">
-    @endforeach
-  </button>
+<button type="button" class="btn btn-xs btn-default" data-toggle="modal" data-target="#exampleModal"><em class="la la-cloud-upload-alt"></em>
+  Import
+  <input type="hidden" name="model-name" value="{{ ucFirst($crud->entity_name) }}">
+</button>
   
   <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -32,16 +29,12 @@
 @push('after_scripts')
     <script>
         const MODEL_NAME = $( 'input[name=model-name]' ).val();
-        var FIELDS = $( 'input[name=fields]' );
         
         $(function() {
             $('body').on('click', '.btn-save', function() {
                 var jform = new FormData();
                 jform.append('file', $('#input_fileUpload').get(0).files[0]);
                 jform.append('model', MODEL_NAME);
-                FIELDS.each(function (key) {
-                  jform.append('fields['+key+']', $(this).val());
-                })
 
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
