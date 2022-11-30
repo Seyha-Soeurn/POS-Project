@@ -27,6 +27,7 @@ class PurchaseObserver
             "purchase_code" => $purchase->id,
         ]);
     }
+
     /**
      * Handle the Purchase "updated" event.
      *

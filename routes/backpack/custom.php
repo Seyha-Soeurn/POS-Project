@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\ProductCrudController;
 use App\Http\Controllers\Admin\PurchaseCrudController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -31,5 +32,9 @@ Route::group([
     // product route extra
     Route::get('getproducts',[ProductCrudController::class,'getProducts']);
     // purchase route extra
-    Route::get('getpurchase',[PurchaseCrudController::class,'getPurchases']);
+    Route::get('getpurchases/{id}',[PurchaseCrudController::class,'getPurchases']);
+    // Get data to view
+    Route::get('products', 'ProductCrudController@listProduct');
+    Route::post('products/filter', 'ProductCrudController@filterProduct');
+    Route::get('products/{id}', 'ProductCrudController@getProduct');
 }); // this should be the absolute last line of this file

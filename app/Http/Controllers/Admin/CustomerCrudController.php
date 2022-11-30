@@ -29,6 +29,7 @@ class CustomerCrudController extends CrudController
         CRUD::setModel(\App\Models\Customer::class);
         CRUD::setRoute(config('backpack.base.route_prefix') . '/customer');
         CRUD::setEntityNameStrings('customer', 'customers');
+        $this->crud->setShowView('preview_customer');
     }
 
     /**

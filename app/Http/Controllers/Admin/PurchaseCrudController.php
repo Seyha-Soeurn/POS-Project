@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Requests\PurchaseRequest;
+use App\Models\Product;
 use App\Models\Purchase;
 use App\Models\Supplier;
 use Backpack\CRUD\app\Http\Controllers\CrudController;
 use Backpack\CRUD\app\Library\CrudPanel\CrudPanelFacade as CRUD;
+use PhpParser\Node\Expr\FuncCall;
 
 /**
  * Class PurchaseCrudController
@@ -35,6 +37,7 @@ class PurchaseCrudController extends CrudController
         CRUD::setCreateView('create_purchase_form');
         CRUD::setUpdateView('create_purchase_form');
         $this->data['supplier'] = Supplier::get();
+        $this->data['products'] = Product::get();
     }
 
     /**
@@ -72,9 +75,7 @@ class PurchaseCrudController extends CrudController
             'name' => 'products',
             'type' => 'select2'
         ]);
-        // CRUD::field('product_id');
         CRUD::field('amount');
-        // CRUD::field('quantity');
 
         /**
          * Fields can be defined using the fluparameterizeent syntax or array syntax:
@@ -88,21 +89,18 @@ class PurchaseCrudController extends CrudController
         CRUD::field('supplier_id');
         CRUD::addField([
             'name' => 'products',
-            'type' => 'select2'
         ]);
         CRUD::field('amount');
     }
 
-    public function getPurchases()
+    public function getPurchases($id)
     {
-        return Purchase::with('supplier','product')->get();
+        return Purchase::with('products','supplier')->find($id);
     }
 
-    public function destroy()
+    public function destroy($id)
     {
-        $entry = $this->crud->getCurrentEntry();
-        $entry->products()->delete();
-        return $this->traitDestroy($entry);
+        dd(request());
     }
 
 }

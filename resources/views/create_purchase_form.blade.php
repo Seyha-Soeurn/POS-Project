@@ -22,35 +22,23 @@
         @endif
 	  </h2>
 	</section>
-    <style>
-        tbody tr td {
-            width:10%;
-        }
-        #quantity, #amount {
-            width: 70%;
-        }
-        #delete_icon {
-            margin-left: 15%;
-            cursor: pointer;
-            color: red;
-        }
-        #select_supplier, #select_product {
-            width: 45%;
-        }
-    </style>
 @endsection
 
 @section('content')
     <div class="col-lg-12">
         @include('crud::inc.grouped_errors')
         <form 
-            method="post"
-            action="{{ url($crud->route) }}"
+            method="POST"
+            action="{{ $crud->entry ? url($crud->route .'/' . $crud->entry->id) : url($crud->route) }}"
             @if ($crud->hasUploadFields('create'))
                 enctype="multipart/form-data"
             @endif
             >
             {!! csrf_field() !!}
+            @if ($crud->entry)
+                @method('PUT')
+            @endif
+            <input type="hidden" name="_http_referrer" value="{{ url($crud->route) }}">
             {{-- load the view from the application if it exists, otherwise load the one in the package --}}
             @if(view()->exists('vendor.backpack.crud.form_content'))
                 @include('vendor.backpack.crud.form_content', [ 'fields' => $crud->fields(), 'action' => 'create' ])
@@ -62,15 +50,50 @@
                         $fields = $crud->fields();
                     @endphp
                     @foreach ($fields as $field)
-                        @if($field['name'] !="amount")
-                            <div class="w-50">
-                                @include($crud->getFirstFieldView($field['type'], $field['view_namespace'] ?? false), $field)
-                            </div>
+                        @if (array_key_exists('id',$fields))
+                            @if ($field['name'] == 'id')
+                                <input type="hidden" name="{{ $field['name'] }}" value="{{ $crud->entry->id }}">
+                            @else
+                                @if ($field['name'] != 'amount')
+                                    @if ($field['name']=='products') 
+                                        <div class="w-50">
+                                            <label>Products</label>
+                                            <select 
+                                            style="width:95%"
+                                            name="products"
+                                            data-init-function="bpFieldInitRelationshipSelectElement" 
+                                            data-field-is-inline="false" 
+                                            ata-column-nullable="true" 
+                                            data-placeholder="Select an entry" 
+                                            data-field-multiple="false" 
+                                            data-language="en" 
+                                            data-is-pivot-select="false" 
+                                            bp-field-main-input="" 
+                                            class="form-control"
+                                            >
+                                                <option selected="-">select entry</option>
+                                                @foreach($products as $item)
+                                                    <option value="{{$item['id']}}">{{$item['name']}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    @else
+                                        <div class="w-50">
+                                            @include($crud->getFirstFieldView($field['type'], $field['view_namespace'] ?? false), $field)
+                                        </div>
+                                    @endif
+                                @endif
+                            @endif
+                        @else
+                            @if($field['name'] !="amount" && $field['name']!="id")
+                                <div class="w-50">
+                                    @include($crud->getFirstFieldView($field['type'], $field['view_namespace'] ?? false), $field)
+                                </div>
+                            @endif
                         @endif
                     @endforeach
                 </div>
             </div>
-            <!-- @include('crud::form_content', [ 'fields' => $crud->fields(), 'action' => 'create' ]) -->
             <div class="purchase_items">
                 {{-- TABLE ONE USE TO SHOW THE PRODUCT AFTER SELECTED --}}
                 <table 
@@ -86,9 +109,6 @@
                             <th data-orderable="true" data-priority="1" data-column-name="name" data-visible-in-table="false" data-visible="true" data-can-be-visible-in-table="true" data-visible-in-modal="true" data-visible-in-export="true" data-force-export="false" class="sorting" tabindex="0" aria-controls="crudTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending">
                                 Product
                             </th>
-                            <th data-orderable="true" data-priority="1" data-column-name="name" data-visible-in-table="false" data-visible="true" data-can-be-visible-in-table="true" data-visible-in-modal="true" data-visible-in-export="true" data-force-export="false" class="sorting" tabindex="0" aria-controls="crudTable" rowspan="1" colspan="1" aria-label="Name: activate to sort column ascending">
-                                Supplier
-                            </th>
                             <th data-orderable="true" data-priority="3" data-column-name="phone" data-visible-in-table="false" data-visible="true" data-can-be-visible-in-table="true" data-visible-in-modal="true" data-visible-in-export="true" data-force-export="false" class="sorting" tabindex="0" aria-controls="crudTable" rowspan="1" colspan="1" aria-label="Phone: activate to sort column ascending">
                                 Quantity
                             </th>
@@ -101,7 +121,28 @@
                         </tr>
                     </thead>
                     <tbody id="tbody_table1">
-                        
+
+                        {{-- EDIT FORM --}}
+                        @if ($crud->entry)
+                            @foreach($crud->entry->products as $key=>$product)
+                                <tr class="odd">
+                                    <td class="name">
+                                        <input name="{{"products[".$key."][product_id]"}}" type="hidden" value={{$product['pivot']['product_id']}}>
+                                        <span>{{$product['name']}}</span>
+                                    </td>
+                                    <td>
+                                        <input name="{{"products[".$key."][quantity]"}}" id="quantity" type="number" value={{$product['pivot']['quantity']}} required="required">
+                                    </td>
+                                    <td class="amount">
+                                        <input name="{{"products[".$key."][amount]"}}" id="amount_1" type="hidden" value={{$product['pivot']['amount']}}>
+                                        <span class="amount">{{$product['pivot']['amount']}}</span>
+                                    </td>
+                                    <td>
+                                        <i class="nav-icon la la-trash trash_icon" id="delete_icon"></i>
+                                    </td>
+                                </tr>
+                            @endforeach                   
+                        @endif 
                     </tbody>
                 </table>
                 <input type="text" name="amount" hidden id="total_amount">
@@ -125,12 +166,19 @@
                     <tbody id="tbody_table2">
                         <tr class="odd" id="g_amount_column">
                             <td>
-                                <span> $</span>
+                                @if ($crud->entry)
+                                    <span> {{$crud->entry->amount}} $</span>
+                                    <input type="hidden" name="amount" value={{$crud->entry->amount}}>
+                                @else
+                                    <span> $</span>
+                                @endif
                             </td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+
             @endif
             {{-- This makes sure that all field assets are loaded. --}}
             <div class="d-none" id="parentLoadedAssets">{{ json_encode(Assets::loaded()) }}</div>
@@ -150,6 +198,35 @@
             var purchase_product_list = []; // LIST OF THE PRODUCT SELECTED BY USER
             var amount_list = []; // LIST OF AMOUNT FROM EACH PRODUCT
             var g_Amount = 0; // TOTAL AMOUNT AFTER SUM AN AMOUNT FROM EACH PRODUCT
+
+            // AUTO FUNCTION USE TO GET OLD DATA FROM DATABASE
+            function getoldData(){
+                var url = $(location).attr("href");
+                var segment = url.split('/');
+                var purcahse_id = segment[5];
+                if (purcahse_id != "undefined"){
+                    $.get("http://127.0.0.1:8000/admin/getpurchases/"+purcahse_id).then((response)=>{
+                        setUp_global_var(response)
+                    })
+                }
+            }
+            getoldData();
+
+            // USE TO ASSIGN LIST, AND TR ID BY DATA GET FROM DB
+            function setUp_global_var(data){
+                var products = data['products'];
+                var supplier = data['supplier'];
+                supplier_selected_global = supplier['name'];
+                supplierid_select_global = supplier['id'];
+                tr_id = products.length;
+                for (i=0;i<products.length;i++){
+                    var object = {};
+                    amount_list.push(products[i]['pivot']['amount'])
+                    object['supplier'] = supplier['name'];
+                    object['product'] = products[i]['name'];
+                    purchase_product_list.push(object)
+                }
+            }
             // GLOBAL DOM VARIABLE
             var tbody_table1 = $('#tbody_table1');
             var trash_icon = $('#delete_icon');
@@ -157,8 +234,11 @@
             var select_supplier_dom = $($('select[name="supplier_id"]'));
             select_supplier_dom.change(function()
             {
-                supplier_selected_global = $(this).children("option:selected").text();
-                supplierid_select_global = $(this).children("option:selected").val();
+                if ($(this).children("option:selected").text() != "-"){
+                    supplier_selected_global = $(this).children("option:selected").text();
+                    supplierid_select_global = $(this).children("option:selected").val();
+                }
+                console.log('log from function1:: select supplier')
             });
             
             // GET PRODUCT SELECTED
@@ -166,17 +246,28 @@
             select_product_dom.on('change',function()
             {
                 var product_selected = $(this).children("option:selected").text();
-                var object = {};
-                object['supplier'] = supplier_selected_global;
-                object['product'] = product_selected;
-                if (purchase_product_list.length==0){
-                    purchase_product_list.push(object);
-                    product_selected_global = $(this).children("option:selected").val();
-                    createTablerecord(object);
-                }else{
-                    product_selected_global = $(this).children("option:selected").val();
-                    check_if_obj_in_arr(purchase_product_list,object);
+                if (product_selected != '-' && supplier_selected_global != ""){
+                    var object = {};
+                    object['supplier'] = supplier_selected_global;
+                    object['product'] = product_selected;
+                    if (purchase_product_list.length==0){
+                        purchase_product_list.push(object);
+                        product_selected_global = $(this).children("option:selected").val();
+                        createTablerecord(object);
+                    }else{
+                        product_selected_global = $(this).children("option:selected").val();
+                        check_if_obj_in_arr(purchase_product_list,object);
+                    }
+                }else {
+                    if (supplier_selected_global == ""){
+                        new Noty({
+                            type: "error",
+                            text: 'supplier is require to select',
+                        }).show();
+                    }
                 }
+                console.log('log from function2:: select product');
+
             });
             
             // DELETE PRODUCT SELECTED FROM TABLE
@@ -212,6 +303,7 @@
                                 }
                                 getListamount();
                                 alert_delete();
+                                console.log('log from function3::delete product');
                             },
                             btnClass:"btn-red",
                         }
@@ -241,15 +333,18 @@
                     var product_input_amount_column = amount_column.children("input");
                     // span_of_amount_column.html(product_name)
                     $.get('http://127.0.0.1:8000/admin/getproducts',function(data){
+                        var one_time = true
                         for (i=0;i<data.length;i++){
                             amount_list = []
-                            if (data[i]['name']==product_name){
+                            if (data[i]['name']==product_name && one_time){
                                 span_of_amount_column.html((data[i]['price'])*product_quantity);
                                 product_input_amount_column.val((data[i]['price'])*product_quantity);
                                 getListamount();
+                                one_time = false
                             }
                         }
                     })
+                    console.log('log from function4:: calculate total amount')
                 })
             })
 
@@ -260,6 +355,7 @@
                     type: "success",
                     text: 'Product is added!',
                 }).show();
+                console.log("log from function6:: alert success message when product added")
             }
 
             // USE TO ALERT WHEN PRODUCT DELETE FROM LIST
@@ -269,11 +365,13 @@
                     type: "success",
                     text: 'Product is deleted!',
                 }).show();   
+                console.log("log function7:: alert delete message")
             }
 
             // USE TO COLLECT ALL THE AMOUNT FROM EACH PRODUCT (GET FROM DOM)
             function getListamount()
             {
+                g_Amount = 0;
                 amount_list = [];
                 // find total amount
                 var table_container = $('#tbody_table1').children();
@@ -288,8 +386,8 @@
                     var td_amount = tr.children("td.amount");
                     amount_list.push(td_amount.children("span.amount").text())
                 }
-                g_Amount = 0;
                 getAmount(amount_list);
+                console.log("log from function8::get text from element")                
             }
 
             // USE TO SUM ALL THE AMOUNT AFTER IT COLLECT INTO THE LIST
@@ -299,6 +397,7 @@
                     g_Amount += parseInt(amounts[i])
                 }
                 setAmount_to_dom(g_Amount);
+                console.log('log from function9:: sum all amount to get total amount');
             }
 
             // USE TO ASSIGN THE TOTAL AMOUNT TO THE DOM (HTML)
@@ -310,6 +409,7 @@
                 var span = td.children('span');
                 $('#total_amount').val(amount);
                 span.html(amount + "$");
+                console.log('log from function10:: set add total amount to element text');
             }
             
             // USE TO CHECK IF THE PRODUCT IS ALREADY SELECT (TO PREVENT DUPLICATE PRODUCT SELECTION)
@@ -333,7 +433,7 @@
                         return;
                     }
                 }
-            
+                console.log("log from function11:: check duplicate object in array");
             }
 
             // USE TO ALERT WHEN THE PRODUCT ALREADY SELECTED
@@ -349,6 +449,7 @@
                         }
                     }
                 })
+                console.log("log from function12:: alert when object duplicate")
             }
 
             // USE TO CREATE THE TR AND APPEND IT TO TABLE BODY WHEN USER SELECT PRODUCT
@@ -367,17 +468,7 @@
                 td_column_product.append(input_column_product);
                 tr.append(td_column_product);
 
-                // CREATE HIDDEN ID COLUMN FOR PURCHASE_PRODUCT
-                var purchase_product_id = $('<input></input>').attr({name:"products["+tr_id+"][id]",hidden:true});
-                td_column_product.append(purchase_product_id);
-                // CREATE SUPPLEIR COLUMN AND APPEND TO THE CONTAINER (TR)
-                var td_column_supplier = $('<td></td>').attr({class:"supplier"});
-                var span_column_supplier = $('<span></span>');
-                var input_column_supplier = $('<input>').attr({type:"hidden",value:supplierid_select_global,})
-                span_column_supplier.html(data['supplier']);
-                td_column_supplier.append(span_column_supplier);
-                td_column_supplier.append(input_column_supplier);
-                tr.append(td_column_supplier);
+
 
                 // CREATE QUANTITY COLUMN AND APPEND TO THE CONTAINER (TR)
                 var td_column_quantity = $('<td></td>');
@@ -400,11 +491,28 @@
                 td_column_action.append(delete_icon);
                 tr.append(td_column_action);
                 tbody_table1.append(tr);
-                getListamount();
                 alert_success();
+                console.log("log from function13:: create dom element");
             }
         });
     </script>
 @endpush
-
+@push('after_style')
+    <style>
+        tbody tr td {
+            width:10%;
+        }
+        #quantity, #amount {
+            width: 70%;
+        }
+        #delete_icon {
+            margin-left: 15%;
+            cursor: pointer;
+            color: red;
+        }
+        #select_supplier, #select_product {
+            width: 45%;
+        }
+    </style>
+@endpush
 @endsection

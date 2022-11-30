@@ -20,7 +20,7 @@ class Purchase extends Model
     ];
     public function products()
     {
-        return $this->belongsToMany(Product::class,"purchase_products");
+        return $this->belongsToMany(Product::class, "purchase_products")->withPivot('amount','quantity');
     }
     public function supplier()
     {
