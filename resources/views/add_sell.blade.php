@@ -82,8 +82,9 @@
                             </thead>
                             <tbody>
                                 {{-- Show owned items --}}
-
+                                
                                 @if ($crud->entry)
+
                                     @php
                                         $productsDiscount = 0;
                                     @endphp

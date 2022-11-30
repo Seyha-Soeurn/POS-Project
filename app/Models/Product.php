@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use App\Models\Image;
-use App\Models\Product;
 use App\Models\Category;
 use App\Models\Purchase;
 use App\Models\OrderProduct;
@@ -43,7 +42,7 @@ class Product extends Model
 
     public function purchases()
     {
-        return $this->hasMany(Purchase::class);
+        return $this->belongsToMany(Purchase::class,"purchase_products");
     }
 
     public function images()

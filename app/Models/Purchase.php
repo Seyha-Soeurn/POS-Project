@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Product;
+use App\Models\PurchaseProduct;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -14,13 +15,12 @@ class Purchase extends Model
     protected $fillable =
     [
         'supplier_id',
-        'product_id',
-        'quantity',
         'amount',
+        'purchase_code',
     ];
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsToMany(Product::class, "purchase_products")->withPivot('amount','quantity');
     }
     public function supplier()
     {

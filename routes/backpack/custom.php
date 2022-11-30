@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ProductCrudController;
+use App\Http\Controllers\Admin\PurchaseCrudController;
+use App\Models\Category;
 use Illuminate\Support\Facades\Route;
 
 // --------------------------
@@ -25,6 +28,10 @@ Route::group([
     Route::crud('order', 'OrderCrudController');
     Route::crud('purchase', 'PurchaseCrudController');
 
+    // product route extra
+    Route::get('getproducts',[ProductCrudController::class,'getProducts']);
+    // purchase route extra
+    Route::get('getpurchases/{id}',[PurchaseCrudController::class,'getPurchases']);
     // Get data to view
     Route::get('products', 'ProductCrudController@listProduct');
     Route::post('products/filter', 'ProductCrudController@filterProduct');

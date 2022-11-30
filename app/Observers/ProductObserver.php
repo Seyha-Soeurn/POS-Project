@@ -18,7 +18,6 @@ class ProductObserver
             'product_code' => 'PR-00' . strval($product->id)
         ]);
     }
-
     /**
      * Handle the Product "updated" event.
      *

@@ -17,6 +17,15 @@ class CategoryProduct extends Model
         'product_id',
     ];
 
+    // // Relations
+    // public function product()
+    // {
+    //     return $this->belongsTo(Category::class);
+    // }
+    // public function category()
+    // {
+    //     return $this->belongsTo(Product::class);
+    // }
     // Relations
     public function product()
     {

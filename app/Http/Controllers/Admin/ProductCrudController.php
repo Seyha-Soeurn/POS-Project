@@ -120,6 +120,9 @@ class ProductCrudController extends CrudController
         return $this->traitDestroy($entry);
     }
 
+    public function getProducts(){
+        return Product::all();
+    }
     // Get all products
     public function listProduct()
     {
