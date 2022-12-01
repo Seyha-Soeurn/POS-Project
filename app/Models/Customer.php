@@ -25,6 +25,14 @@ class Customer extends Model
         'address'
     ];
 
+    public $importable =
+    [
+        'name',
+        'email',
+        'phone',
+        'address'
+    ];
+
     // Relations
     public function image()
     {

@@ -23,6 +23,13 @@ class Product extends Model
         'product_code',
     ];
 
+    public $importable =
+    [
+        'name',
+        'price',
+        'stock',
+    ];
+
     // Relations
     public function categories()
     {

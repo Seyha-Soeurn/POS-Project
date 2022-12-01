@@ -50,6 +50,14 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public $importable =
+    [
+        'name',
+        'email',
+        'phone',
+        'address'
+    ];
+
     // Relations
     public function image()
     {

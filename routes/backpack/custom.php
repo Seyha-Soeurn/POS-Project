@@ -27,7 +27,6 @@ Route::group([
     Route::crud('category', 'CategoryCrudController');
     Route::crud('order', 'OrderCrudController');
     Route::crud('purchase', 'PurchaseCrudController');
-    Route::crud('order-product', 'OrderProductCrudController');
 
     // product route extra
     Route::get('getproducts',[ProductCrudController::class,'getProducts']);
@@ -39,4 +38,7 @@ Route::group([
     Route::get('products/{id}', 'ProductCrudController@getProduct');
     Route::get('charts/weekly-purchases', 'Charts\WeeklyPurchasesChartController@response')->name('charts.weekly-purchases.index');
     Route::get('charts/weekly-sells', 'Charts\WeeklySellsChartController@response')->name('charts.weekly-sells.index');
+
+    // Import
+    Route::post('import', 'ImportController@import');
 }); // this should be the absolute last line of this file
