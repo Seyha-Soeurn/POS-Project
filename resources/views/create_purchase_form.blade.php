@@ -124,14 +124,17 @@
 
                         {{-- EDIT FORM --}}
                         @if ($crud->entry)
+                            @dd($crud->entry)
                             @foreach($crud->entry->products as $key=>$product)
                                 <tr class="odd">
                                     <td class="name">
+                                        {{-- <input type="hidden" value={{$}}> --}}
                                         <input name="{{"products[".$key."][product_id]"}}" type="hidden" value={{$product['pivot']['product_id']}}>
                                         <span>{{$product['name']}}</span>
                                     </td>
                                     <td>
-                                        <input name="{{"products[".$key."][quantity]"}}" id="quantity" type="number" value={{$product['pivot']['quantity']}} required="required">
+                            @dd($product)
+                            <input name="{{"products[".$key."][quantity]"}}" id="quantity" type="number" value={{$product['pivot']['quantity']}} required="required">
                                     </td>
                                     <td class="amount">
                                         <input name="{{"products[".$key."][amount]"}}" id="amount_1" type="hidden" value={{$product['pivot']['amount']}}>
@@ -198,6 +201,9 @@
             var purchase_product_list = []; // LIST OF THE PRODUCT SELECTED BY USER
             var amount_list = []; // LIST OF AMOUNT FROM EACH PRODUCT
             var g_Amount = 0; // TOTAL AMOUNT AFTER SUM AN AMOUNT FROM EACH PRODUCT
+            // GLOBAL DOM VARIABLE
+            var tbody_table1 = $('#tbody_table1');
+            var trash_icon = $('#delete_icon');
 
             // AUTO FUNCTION USE TO GET OLD DATA FROM DATABASE
             function getoldData(){
@@ -227,9 +233,6 @@
                     purchase_product_list.push(object)
                 }
             }
-            // GLOBAL DOM VARIABLE
-            var tbody_table1 = $('#tbody_table1');
-            var trash_icon = $('#delete_icon');
             // GET SUPPLIER SELECTED
             var select_supplier_dom = $($('select[name="supplier_id"]'));
             select_supplier_dom.change(function()
@@ -266,6 +269,7 @@
                         }).show();
                     }
                 }
+                console.log(purchase_product_list);
                 console.log('log from function2:: select product');
 
             });
@@ -274,8 +278,10 @@
             $('body').on('click','.trash_icon',function(e)
             {
                 var record_to_delete = $(this).parent().parent();
+                var product_name = record_to_delete.children('.name');
+                var supplier = product_name.children("#supplier_name")
                 var product_name_to_delete = record_to_delete.children(".name").text();
-                var product_supplier_to_delete = record_to_delete.children(".supplier").text();
+                var product_supplier_to_delete = supplier.val();
                 var product_amount_column = record_to_delete.children('.amount');
                 var product_amount_to_delete = product_amount_column.children('span').text();
                 $.confirm({
@@ -296,6 +302,7 @@
                                 // DELETE PURCHASE_PRODUCT FROM THE LIST WHEN THE PRODUCT SELECTED DELETE
                                 for (index=0;index < purchase_product_list.length; index++){
 
+                                    console.log()
                                     if (purchase_product_list[index]['product']==product_name_to_delete && purchase_product_list[index]['supplier']==product_supplier_to_delete){
                                         purchase_product_list.splice(index,1);
 
@@ -460,12 +467,13 @@
                 // CREATE PRODUCT COLUMN AND APPEND TO THE CONTIANER (TR)
                 var td_column_product = $('<td></td>').attr({class:"name"});
                 var span_column_product = $('<span></span>');
-                var input_column_product = $('<input>').attr({type:"hidden",value:product_selected_global});
                 var input_product_id = $('<input></input>').attr({name:"products["+tr_id+"][product_id]",type:'hidden',value:product_selected_global});
+                // var input_supplier_column = $('<input><input>').attr({type:'hidden',text:data['supplier'],id:"supplier"});
+                var supplier = $('<input></input>').attr({id:"supplier_name",value:data['supplier'],type:'hidden'});
                 td_column_product.append(input_product_id);
                 span_column_product.html(data['product']);
                 td_column_product.append(span_column_product);
-                td_column_product.append(input_column_product);
+                td_column_product.append(supplier);
                 tr.append(td_column_product);
 
 

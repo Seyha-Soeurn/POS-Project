@@ -97,10 +97,4 @@ class PurchaseCrudController extends CrudController
     {
         return Purchase::with('products','supplier')->find($id);
     }
-
-    public function destroy($id)
-    {
-        dd(request());
-    }
-
 }
